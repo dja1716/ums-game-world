@@ -1,12 +1,13 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'GameFlix - 게임 스트리밍 서비스',
-  description: '최고의 게임을 스트리밍으로 즐기세요',
+  title: "Um's Game World - 온라인 게임 플랫폼",
+  description: "Um's Game World에서 다양한 게임을 즐겨보세요",
 }
 
 export default function RootLayout({
@@ -21,14 +22,14 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
-                <a href="/" className="text-red-600 font-bold text-2xl">GameFlix</a>
+                <Link href="/" className="text-red-600 font-bold text-2xl">Um's Game World</Link>
               </div>
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">
-                  <a href="#" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">홈</a>
-                  <a href="#" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">인기 게임</a>
-                  <a href="#" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">새로운 게임</a>
-                  <a href="#" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">내 라이브러리</a>
+                  <Link href="/" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">홈</Link>
+                  <Link href="#" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">인기 게임</Link>
+                  <Link href="#" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">새로운 게임</Link>
+                  <Link href="#" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">내 라이브러리</Link>
                 </div>
               </div>
             </div>

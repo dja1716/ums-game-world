@@ -2,11 +2,23 @@
 
 import { useEffect, useState, useCallback } from 'react';
 
+interface Piece {
+  shape: number[][];
+  color: string;
+  x: number;
+  y: number;
+}
+
+interface Tetromino {
+  shape: number[][];
+  color: string;
+}
+
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
 const BLOCK_SIZE = 30;
 
-const TETROMINOS = {
+const TETROMINOS: Record<string, Tetromino> = {
   I: {
     shape: [[1, 1, 1, 1]],
     color: '#00f0f0'
@@ -57,7 +69,7 @@ const TETROMINOS = {
 
 export default function TetrisGame() {
   const [board, setBoard] = useState<number[][]>([]);
-  const [currentPiece, setCurrentPiece] = useState<any>(null);
+  const [currentPiece, setCurrentPiece] = useState<Piece | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
 
@@ -73,9 +85,9 @@ export default function TetrisGame() {
   const createNewPiece = () => {
     const pieces = Object.keys(TETROMINOS);
     const randomPiece = pieces[Math.floor(Math.random() * pieces.length)];
-    const piece = {
-      shape: TETROMINOS[randomPiece as keyof typeof TETROMINOS].shape,
-      color: TETROMINOS[randomPiece as keyof typeof TETROMINOS].color,
+    const piece: Piece = {
+      shape: TETROMINOS[randomPiece].shape,
+      color: TETROMINOS[randomPiece].color,
       x: Math.floor(BOARD_WIDTH / 2) - 1,
       y: 0
     };
@@ -83,7 +95,7 @@ export default function TetrisGame() {
   };
 
   // 충돌 검사
-  const checkCollision = (piece: any, board: number[][], moveX = 0, moveY = 0) => {
+  const checkCollision = (piece: Piece, board: number[][], moveX = 0, moveY = 0) => {
     for (let y = 0; y < piece.shape.length; y++) {
       for (let x = 0; x < piece.shape[y].length; x++) {
         if (piece.shape[y][x]) {
@@ -117,8 +129,8 @@ export default function TetrisGame() {
   // 조각 회전
   const rotatePiece = useCallback(() => {
     if (!currentPiece || gameOver) return;
-    const rotated = currentPiece.shape[0].map((val: any, index: number) =>
-      currentPiece.shape.map((row: any) => row[index]).reverse()
+    const rotated = currentPiece.shape[0].map((_: number, index: number) =>
+      currentPiece.shape.map(row => row[index]).reverse()
     );
     const newPiece = {
       ...currentPiece,
@@ -165,7 +177,7 @@ export default function TetrisGame() {
         clearInterval(gameLoop);
       };
     }
-  }, [currentPiece, gameOver]);
+  }, [currentPiece, gameOver, dropPiece]);
 
   // 조각 드롭
   const dropPiece = () => {

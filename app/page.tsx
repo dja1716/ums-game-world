@@ -1,8 +1,19 @@
 import { PlayIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import Image from 'next/image';
+
+interface Game {
+  id: number;
+  title: string;
+  image?: string;
+  genre: string;
+  rating: string;
+  href: string;
+  preview?: boolean;
+}
 
 export default function Home() {
-  const featuredGames = [
+  const featuredGames: Game[] = [
     {
       id: 1,
       title: "테트리스",
@@ -80,13 +91,16 @@ export default function Home() {
             <Link href={game.href} key={game.id} className="group relative overflow-hidden rounded-lg">
               {game.preview ? (
                 <TetrisPreview />
-              ) : (
-                <img
-                  src={game.image}
-                  alt={game.title}
-                  className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-300"
-                />
-              )}
+              ) : game.image ? (
+                <div className="relative w-full h-64">
+                  <Image
+                    src={game.image}
+                    alt={game.title}
+                    fill
+                    className="object-cover transform group-hover:scale-110 transition duration-300"
+                  />
+                </div>
+              ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
                 <h3 className="text-lg font-semibold">{game.title}</h3>
                 <div className="flex items-center justify-between">
