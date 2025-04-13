@@ -10,6 +10,7 @@ interface Game {
   rating: string;
   href: string;
   preview?: boolean;
+  bgColor?: string;
 }
 
 export default function Home() {
@@ -25,10 +26,10 @@ export default function Home() {
     {
       id: 2,
       title: "God of War Ragnarök",
-      image: "https://images.unsplash.com/photo-1640079421264-61f9d6f3cf0d",
       genre: "Action-Adventure",
       rating: "9.7",
-      href: "#"
+      href: "#",
+      bgColor: "bg-purple-800"
     },
     // 더 많은 게임들...
   ];
@@ -91,16 +92,9 @@ export default function Home() {
             <Link href={game.href} key={game.id} className="group relative overflow-hidden rounded-lg">
               {game.preview ? (
                 <TetrisPreview />
-              ) : game.image ? (
-                <div className="relative w-full h-64">
-                  <Image
-                    src={game.image}
-                    alt={game.title}
-                    fill
-                    className="object-cover transform group-hover:scale-110 transition duration-300"
-                  />
-                </div>
-              ) : null}
+              ) : (
+                <div className={`w-full h-64 ${game.bgColor || 'bg-gray-700'} transition-transform group-hover:scale-110`} />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
                 <h3 className="text-lg font-semibold">{game.title}</h3>
                 <div className="flex items-center justify-between">

@@ -17,7 +17,7 @@ interface Tetromino {
 
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
-const BLOCK_SIZE = 30;
+const BASE_BLOCK_SIZE = 30;
 
 const TETROMINOS: Record<string, Tetromino> = {
   I: {
@@ -69,10 +69,33 @@ const TETROMINOS: Record<string, Tetromino> = {
 };
 
 export default function TetrisGame() {
+  const [blockSize, setBlockSize] = useState(BASE_BLOCK_SIZE);
   const [board, setBoard] = useState<number[][]>([]);
   const [currentPiece, setCurrentPiece] = useState<Piece | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
+
+  // 화면 크기에 따라 블록 크기 조정
+  useEffect(() => {
+    const adjustBlockSize = () => {
+      const isMobile = window.innerWidth < 768;
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      
+      if (isMobile) {
+        // 모바일에서는 화면 너비의 90%를 사용하고, 높이도 고려
+        const maxWidthSize = (screenWidth * 0.9) / BOARD_WIDTH;
+        const maxHeightSize = (screenHeight * 0.6) / BOARD_HEIGHT;
+        setBlockSize(Math.floor(Math.min(maxWidthSize, maxHeightSize, BASE_BLOCK_SIZE)));
+      } else {
+        setBlockSize(BASE_BLOCK_SIZE);
+      }
+    };
+
+    adjustBlockSize();
+    window.addEventListener('resize', adjustBlockSize);
+    return () => window.removeEventListener('resize', adjustBlockSize);
+  }, []);
 
   // 보드 초기화
   const initBoard = () => {
@@ -259,104 +282,120 @@ export default function TetrisGame() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4">
-      <div className="mb-4 text-white">
-        <h1 className="text-3xl font-bold mb-2">테트리스</h1>
-        <p className="text-xl">점수: {score}</p>
-      </div>
-      
-      <div className="relative bg-gray-800 p-4 rounded-lg">
-        {gameOver ? (
-          <div className="absolute inset-0 bg-black/80 flex items-center justify-center flex-col">
-            <p className="text-white text-2xl mb-4">게임 오버!</p>
-            <button
-              onClick={restartGame}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              다시 시작
-            </button>
+    <div className="relative min-h-screen bg-gray-900">
+      <div className="p-4 pb-[250px] md:pb-4">
+        <div className="w-full max-w-lg mx-auto">
+          <div className="mb-4 text-white text-center">
+            <h1 className="text-2xl md:text-3xl font-bold mb-2">테트리스</h1>
+            <p className="text-lg md:text-xl">점수: {score}</p>
           </div>
-        ) : null}
-        
-        <div
-          style={{
-            width: BLOCK_SIZE * BOARD_WIDTH,
-            height: BLOCK_SIZE * BOARD_HEIGHT,
-          }}
-          className="grid grid-cols-10 gap-[1px] bg-gray-700"
-        >
-          {board.map((row, y) =>
-            row.map((cell, x) => {
-              let isActive = false;
-              let activeColor = '';
+          
+          <div className="relative bg-gray-800 p-2 md:p-4 rounded-lg mx-auto" style={{ maxWidth: 'fit-content' }}>
+            {gameOver ? (
+              <div className="absolute inset-0 bg-black/80 flex items-center justify-center flex-col z-[60]">
+                <p className="text-white text-xl md:text-2xl mb-4">게임 오버!</p>
+                <button
+                  onClick={restartGame}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  다시 시작
+                </button>
+              </div>
+            ) : null}
+            
+            <div
+              style={{
+                width: blockSize * BOARD_WIDTH,
+                height: blockSize * BOARD_HEIGHT,
+              }}
+              className="grid grid-cols-10 gap-[1px] bg-gray-700"
+            >
+              {board.map((row, y) =>
+                row.map((cell, x) => {
+                  let isActive = false;
+                  let activeColor = '';
 
-              if (currentPiece) {
-                currentPiece.shape.forEach((row: number[], pieceY: number) => {
-                  row.forEach((value: number, pieceX: number) => {
-                    if (
-                      value &&
-                      pieceY + currentPiece.y === y &&
-                      pieceX + currentPiece.x === x
-                    ) {
-                      isActive = true;
-                      activeColor = currentPiece.color;
-                    }
-                  });
-                });
-              }
+                  if (currentPiece) {
+                    currentPiece.shape.forEach((row: number[], pieceY: number) => {
+                      row.forEach((value: number, pieceX: number) => {
+                        if (
+                          value &&
+                          pieceY + currentPiece.y === y &&
+                          pieceX + currentPiece.x === x
+                        ) {
+                          isActive = true;
+                          activeColor = currentPiece.color;
+                        }
+                      });
+                    });
+                  }
 
-              return (
-                <div
-                  key={`${y}-${x}`}
-                  style={{
-                    width: BLOCK_SIZE,
-                    height: BLOCK_SIZE,
-                    backgroundColor: isActive ? activeColor : cell ? '#ffffff' : '#1f2937',
-                  }}
-                  className="border border-gray-600"
-                />
-              );
-            })
-          )}
+                  return (
+                    <div
+                      key={`${y}-${x}`}
+                      style={{
+                        width: blockSize,
+                        height: blockSize,
+                        backgroundColor: isActive ? activeColor : cell ? '#ffffff' : '#1f2937',
+                      }}
+                      className="border border-gray-600"
+                    />
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* PC 조작 방법 */}
+        <div className="mt-4 text-white text-center hidden md:block">
+          <p className="mb-2">조작 방법:</p>
+          <p>← → : 이동</p>
+          <p>↑ : 회전</p>
+          <p>↓ : 빠른 하강</p>
         </div>
       </div>
 
       {/* 모바일 컨트롤러 */}
-      <div className="mt-8 grid grid-cols-3 gap-4 md:hidden">
-        <div className="col-span-3 flex justify-center mb-4">
-          <button
-            onClick={() => handleTouchControl('rotate')}
-            className="bg-gray-700 p-4 rounded-full text-white hover:bg-gray-600 active:bg-gray-500 transition"
-          >
-            <ArrowUpIcon className="w-8 h-8" />
-          </button>
-        </div>
-        <button
-          onClick={() => handleTouchControl('left')}
-          className="bg-gray-700 p-4 rounded-full text-white hover:bg-gray-600 active:bg-gray-500 transition"
-        >
-          <ArrowLeftIcon className="w-8 h-8" />
-        </button>
-        <button
-          onClick={() => handleTouchControl('down')}
-          className="bg-gray-700 p-4 rounded-full text-white hover:bg-gray-600 active:bg-gray-500 transition"
-        >
-          <ArrowDownIcon className="w-8 h-8" />
-        </button>
-        <button
-          onClick={() => handleTouchControl('right')}
-          className="bg-gray-700 p-4 rounded-full text-white hover:bg-gray-600 active:bg-gray-500 transition"
-        >
-          <ArrowRightIcon className="w-8 h-8" />
-        </button>
-      </div>
+      <div className="fixed bottom-0 left-0 right-0 w-full md:hidden" style={{ position: 'fixed', bottom: 0 }}>
+        <div className="bg-gray-900/95 border-t border-gray-800">
+          <div className="max-w-md mx-auto p-4 pb-8">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-3 flex justify-center mb-4">
+                <button
+                  onClick={() => handleTouchControl('rotate')}
+                  className="bg-gray-800 w-20 h-20 rounded-2xl text-white active:bg-gray-700 transition flex items-center justify-center shadow-lg"
+                  aria-label="회전"
+                >
+                  <div>위</div>
+                  <ArrowUpIcon className="w-14 h-14 text-white" />
 
-      {/* PC 조작 방법 (모바일에서는 숨김) */}
-      <div className="mt-4 text-white text-center hidden md:block">
-        <p className="mb-2">조작 방법:</p>
-        <p>← → : 이동</p>
-        <p>↑ : 회전</p>
-        <p>↓ : 빠른 하강</p>
+                </button>
+              </div>
+              <button
+                onClick={() => handleTouchControl('left')}
+                className="bg-gray-800 w-20 h-20 rounded-2xl text-white active:bg-gray-700 transition flex items-center justify-center shadow-lg"
+                aria-label="왼쪽"
+              >
+                <ArrowLeftIcon className="w-10 h-10 text-white" />
+              </button>
+              <button
+                onClick={() => handleTouchControl('down')}
+                className="bg-gray-800 w-20 h-20 rounded-2xl text-white active:bg-gray-700 transition flex items-center justify-center shadow-lg"
+                aria-label="아래"
+              >
+                <ArrowDownIcon className="w-10 h-10 text-white" />
+              </button>
+              <button
+                onClick={() => handleTouchControl('right')}
+                className="bg-gray-800 w-20 h-20 rounded-2xl text-white active:bg-gray-700 transition flex items-center justify-center shadow-lg"
+                aria-label="오른쪽"
+              >
+                <ArrowRightIcon className="w-10 h-10 text-white" />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
