@@ -1,103 +1,103 @@
-import Image from "next/image";
+import { PlayIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const featuredGames = [
+    {
+      id: 1,
+      title: "테트리스",
+      genre: "퍼즐",
+      rating: "9.5",
+      href: "/games/tetris",
+      preview: true
+    },
+    {
+      id: 2,
+      title: "God of War Ragnarök",
+      image: "https://images.unsplash.com/photo-1640079421264-61f9d6f3cf0d",
+      genre: "Action-Adventure",
+      rating: "9.7",
+      href: "#"
+    },
+    // 더 많은 게임들...
+  ];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  const TetrisPreview = () => (
+    <div className="w-full h-64 bg-gray-900 flex items-center justify-center p-4 font-mono">
+      <div className="grid grid-cols-4 gap-1">
+        <div className="bg-cyan-500 w-6 h-6" />
+        <div className="bg-cyan-500 w-6 h-6" />
+        <div className="bg-cyan-500 w-6 h-6" />
+        <div className="bg-cyan-500 w-6 h-6" />
+        <div className="bg-purple-500 w-6 h-6" />
+        <div className="bg-purple-500 w-6 h-6" />
+        <div className="bg-purple-500 w-6 h-6" />
+        <div className="bg-transparent w-6 h-6" />
+        <div className="bg-yellow-500 w-6 h-6" />
+        <div className="bg-yellow-500 w-6 h-6" />
+        <div className="bg-transparent w-6 h-6" />
+        <div className="bg-transparent w-6 h-6" />
+        <div className="bg-red-500 w-6 h-6" />
+        <div className="bg-red-500 w-6 h-6" />
+        <div className="bg-transparent w-6 h-6" />
+        <div className="bg-transparent w-6 h-6" />
+      </div>
     </div>
+  );
+
+  return (
+    <main className="min-h-screen bg-black text-white">
+      {/* Hero Section */}
+      <div className="relative h-screen">
+        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70" />
+        <div className="relative h-full flex items-center px-8 md:px-16">
+          <div className="max-w-2xl">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4">테트리스</h1>
+            <p className="text-lg md:text-xl mb-8">
+              전설적인 퍼즐 게임을 지금 바로 플레이하세요. 블록을 쌓고, 줄을 완성하고, 최고 점수에 도전하세요!
+            </p>
+            <Link href="/games/tetris" className="inline-block">
+              <button className="bg-red-600 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-red-700 transition">
+                <PlayIcon className="w-6 h-6" />
+                플레이 테트리스
+              </button>
+            </Link>
+          </div>
+          <div className="hidden lg:block absolute right-16 top-1/2 -translate-y-1/2">
+            <div className="scale-150">
+              <TetrisPreview />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Featured Games */}
+      <section className="px-8 md:px-16 py-12">
+        <h2 className="text-2xl md:text-3xl font-bold mb-6">인기 게임</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {featuredGames.map((game) => (
+            <Link href={game.href} key={game.id} className="group relative overflow-hidden rounded-lg">
+              {game.preview ? (
+                <TetrisPreview />
+              ) : (
+                <img
+                  src={game.image}
+                  alt={game.title}
+                  className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-300"
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                <h3 className="text-lg font-semibold">{game.title}</h3>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-300">{game.genre}</span>
+                  <span className="text-sm text-yellow-400">★ {game.rating}</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }
