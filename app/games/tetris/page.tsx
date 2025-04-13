@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/solid';
 
 interface Piece {
   shape: number[][];
@@ -187,6 +188,24 @@ export default function TetrisGame() {
     }
   }, [board, currentPiece, gameOver, createNewPiece]);
 
+  // 모바일 컨트롤러 핸들러
+  const handleTouchControl = useCallback((action: 'left' | 'right' | 'rotate' | 'down') => {
+    switch (action) {
+      case 'left':
+        movePiece(-1);
+        break;
+      case 'right':
+        movePiece(1);
+        break;
+      case 'rotate':
+        rotatePiece();
+        break;
+      case 'down':
+        dropPiece();
+        break;
+    }
+  }, [movePiece, rotatePiece, dropPiece]);
+
   // 키보드 이벤트 처리
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -302,7 +321,38 @@ export default function TetrisGame() {
         </div>
       </div>
 
-      <div className="mt-4 text-white text-center">
+      {/* 모바일 컨트롤러 */}
+      <div className="mt-8 grid grid-cols-3 gap-4 md:hidden">
+        <div className="col-span-3 flex justify-center mb-4">
+          <button
+            onClick={() => handleTouchControl('rotate')}
+            className="bg-gray-700 p-4 rounded-full text-white hover:bg-gray-600 active:bg-gray-500 transition"
+          >
+            <ArrowUpIcon className="w-8 h-8" />
+          </button>
+        </div>
+        <button
+          onClick={() => handleTouchControl('left')}
+          className="bg-gray-700 p-4 rounded-full text-white hover:bg-gray-600 active:bg-gray-500 transition"
+        >
+          <ArrowLeftIcon className="w-8 h-8" />
+        </button>
+        <button
+          onClick={() => handleTouchControl('down')}
+          className="bg-gray-700 p-4 rounded-full text-white hover:bg-gray-600 active:bg-gray-500 transition"
+        >
+          <ArrowDownIcon className="w-8 h-8" />
+        </button>
+        <button
+          onClick={() => handleTouchControl('right')}
+          className="bg-gray-700 p-4 rounded-full text-white hover:bg-gray-600 active:bg-gray-500 transition"
+        >
+          <ArrowRightIcon className="w-8 h-8" />
+        </button>
+      </div>
+
+      {/* PC 조작 방법 (모바일에서는 숨김) */}
+      <div className="mt-4 text-white text-center hidden md:block">
         <p className="mb-2">조작 방법:</p>
         <p>← → : 이동</p>
         <p>↑ : 회전</p>
