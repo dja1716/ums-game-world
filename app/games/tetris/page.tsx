@@ -254,24 +254,24 @@ export default function TetrisGame() {
     };
   }, [movePiece, rotatePiece, dropPiece]);
 
-  // 게임 루프
-  useEffect(() => {
-    if (!gameOver) {
-      const gameLoop = setInterval(() => {
-        dropPiece();
-      }, 1000);
-
-      return () => {
-        clearInterval(gameLoop);
-      };
-    }
-  }, [gameOver, dropPiece]);
-
   // 게임 시작
   useEffect(() => {
-    initBoard();
-    createNewPiece();
-  }, []);
+    if (!board.length) {
+      initBoard();
+      createNewPiece();
+    }
+  }, [board.length, createNewPiece]);
+
+  // 게임 루프
+  useEffect(() => {
+    if (gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      dropPiece();
+    }, 1000);
+
+    return () => clearInterval(gameLoop);
+  }, [gameOver, dropPiece]);
 
   // 게임 재시작
   const restartGame = () => {
