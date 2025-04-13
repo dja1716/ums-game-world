@@ -6,8 +6,8 @@ import Link from 'next/link'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Um's Game World - 온라인 게임 플랫폼",
-  description: "Um's Game World에서 다양한 게임을 즐겨보세요",
+  title: "Um&apos;s Game World - 온라인 게임 플랫폼",
+  description: "Um&apos;s Game World에서 다양한 게임을 즐겨보세요",
 }
 
 export default function RootLayout({
@@ -22,7 +22,7 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
-                <Link href="/" className="text-red-600 font-bold text-2xl">Um's Game World</Link>
+                <Link href="/" className="text-red-600 font-bold text-2xl">Um&apos;s Game World</Link>
               </div>
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">

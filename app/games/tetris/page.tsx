@@ -82,7 +82,7 @@ export default function TetrisGame() {
   };
 
   // 새로운 테트로미노 생성
-  const createNewPiece = () => {
+  const createNewPiece = useCallback(() => {
     const pieces = Object.keys(TETROMINOS);
     const randomPiece = pieces[Math.floor(Math.random() * pieces.length)];
     const piece: Piece = {
@@ -92,7 +92,7 @@ export default function TetrisGame() {
       y: 0
     };
     setCurrentPiece(piece);
-  };
+  }, []);
 
   // 충돌 검사
   const checkCollision = (piece: Piece, board: number[][], moveX = 0, moveY = 0) => {
@@ -141,46 +141,8 @@ export default function TetrisGame() {
     }
   }, [currentPiece, board, gameOver]);
 
-  // 키보드 이벤트 처리
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case 'ArrowLeft':
-          movePiece(-1);
-          break;
-        case 'ArrowRight':
-          movePiece(1);
-          break;
-        case 'ArrowUp':
-          rotatePiece();
-          break;
-        case 'ArrowDown':
-          dropPiece();
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [movePiece, rotatePiece]);
-
-  // 게임 루프
-  useEffect(() => {
-    if (!gameOver) {
-      const gameLoop = setInterval(() => {
-        dropPiece();
-      }, 1000);
-
-      return () => {
-        clearInterval(gameLoop);
-      };
-    }
-  }, [currentPiece, gameOver, dropPiece]);
-
   // 조각 드롭
-  const dropPiece = () => {
+  const dropPiece = useCallback(() => {
     if (!currentPiece || gameOver) return;
 
     if (!checkCollision(currentPiece, board, 0, 1)) {
@@ -223,7 +185,45 @@ export default function TetrisGame() {
       setBoard(newBoard);
       createNewPiece();
     }
-  };
+  }, [board, currentPiece, gameOver, createNewPiece]);
+
+  // 키보드 이벤트 처리
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case 'ArrowLeft':
+          movePiece(-1);
+          break;
+        case 'ArrowRight':
+          movePiece(1);
+          break;
+        case 'ArrowUp':
+          rotatePiece();
+          break;
+        case 'ArrowDown':
+          dropPiece();
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [movePiece, rotatePiece, dropPiece]);
+
+  // 게임 루프
+  useEffect(() => {
+    if (!gameOver) {
+      const gameLoop = setInterval(() => {
+        dropPiece();
+      }, 1000);
+
+      return () => {
+        clearInterval(gameLoop);
+      };
+    }
+  }, [gameOver, dropPiece]);
 
   // 게임 시작
   useEffect(() => {
